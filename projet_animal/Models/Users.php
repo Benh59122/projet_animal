@@ -30,19 +30,19 @@ class Users {
         if($passverify){
             $_SESSION['user']['id'] = $result['id_us'];
             $_SESSION['user']['login'] = $result['login'];
-            $_SESSION['user']['firstName'] = $result['firstName'];
-            $_SESSION['user']['lastName'] = $result['lastName'];
+            $_SESSION['user']['firstname'] = $result['firstname'];
+            $_SESSION['user']['name'] = $result['name'];
         }
     }
 
-    public function insertUser(string $username, string $password,string $firstName,string $lastName) : void
+    public function insertUser($username, $password, $firstname, $name) : void
     {
-        $query = $this->getBdd->prepare("INSERT INTO users(email,password,firstName,lastName) VALUES (:email,:password,:firstName,:lastName)");
+        $query = $this->getBdd->prepare("INSERT INTO users(email,password,firstname,name) VALUES (:email,:password,:firstname,:name)");
         $query->execute([
             ':email'=>$username,
             ':password'=>$password,
-            ':firstName'=>$firstName,
-            ':lastName'=>$lastName
+            ':firstname'=>$firstname,
+            ':name'=>$name
         ]);
     }
 }
