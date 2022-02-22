@@ -1,49 +1,36 @@
 <?php
-include 'Bdd.php';
+include_once "Bdd.php";
+class Users
+{
+    private PDO $bdd;
 
-class Users {
-
-    private PDO $getBdd;
-    
-    public function __construct() {
-        $bdd = new Bdd();
-        $this->getBdd = $bdd->getBdd();
+    public function __construct(){
+        $bddClass = new Bdd();
+        $this->bdd = $bddClass->getBdd();
     }
 
-    public function getAll() : array
+    public function insertUser($data)
     {
-        $req = $this->getBdd->prepare("SELECT * FROM users");
-        $req->execute();
-        return $req->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function connectUser(string $username,string $password) : void
-    {
-        $query = $this->getBdd->prepare("SELECT * FROM users WHERE login = :login");
-
-        $query->execute([
-            ":login" => $username
+        $password = password_hash($data['password'], PASSWORD_BCRYPT);
+        $request = $this->bdd->prepare("INSERT INTO users(name, firstname, email, password, admin) VALUES (:name,:firstname,:email,:password,0)");
+        $request->execute([
+            ':name'=>$data['name'],
+            ':firstname'=>$data['firstname'],
+            ':email'=>$data['email'],
+            ':password'=>$password
         ]);
-
-        $result = $query->fetch(PDO::FETCH_ASSOC);
-        $passverify = password_verify($password, $result['password']);
-        if($passverify){
-            $_SESSION['user']['id'] = $result['id_us'];
-            $_SESSION['user']['login'] = $result['login'];
-            $_SESSION['user']['firstname'] = $result['firstname'];
-            $_SESSION['user']['name'] = $result['name'];
-        }
     }
 
-    public function insertUser($username, $password, $firstname, $name) : void
+    public function verifyUser($data)
     {
-        $query = $this->getBdd->prepare("INSERT INTO users(email,password,firstname,name) VALUES (:email,:password,:firstname,:name)");
-        $query->execute([
-            ':email'=>$username,
-            ':password'=>$password,
-            ':firstname'=>$firstname,
-            ':name'=>$name
+        $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL) ? $data['email'] : null;
+
+        $request = $this->bdd->prepare("SELECT * FROM users WHERE email = :email");
+        $request->execute([
+            ':email' => $email
         ]);
+        return $request->fetch(PDO::FETCH_ASSOC);
+
+
     }
 }
-?>

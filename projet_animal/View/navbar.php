@@ -11,15 +11,15 @@
                     <a class="nav-link active" aria-current="page" href="/">Accueil</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../Controller/PostsController.php">Voir les posts</a>
+                    <a class="nav-link active" href="../Controller/PostsController.php">Voir les posts</a>
                 </li>
             <?php endif; ?>
             </ul>
 
             <div>
                 <?php if(!isset($_SESSION['user'])) : ?>
-                    <a class="btn btn-primary" href="../Controller/ConnexionController.php">Se Connecter</a>
-                    <a class="btn btn-success" href="../Controller/InscriptionController.php">S'inscrire</a>
+                    <a class="btn btn-primary" href="../Controller/NavigationController.php?login">Se Connecter</a>
+                    <a class="btn btn-success" href="../Controller/NavigationController.php?register">S'inscrire</a>
                 <?php endif; ?>
                 <?php if (isset($_SESSION['user'])) : ?>
                     <a class="btn btn-danger" href="../Controller/DisconnectController.php">Se Déconnecter</a>
